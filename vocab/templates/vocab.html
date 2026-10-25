@@ -42,7 +42,6 @@
 
 <body>
 <div class="container">
-
   <div class="row">
     <div class="col-xs-6 text-center">
       <h1>Words</h1>
@@ -80,36 +79,38 @@
 <br />
 <div class="row">
   <div class="col-xs-6 text-center">
-  <form id="entry" method="POST" action="/_check">
+  <form id="entry" action="/_check">
     <label for="attempt">Word:</label>
     <input id="attempt" name="attempt" type="text" width="15"
       autocomplete="off"  autofocus />
-    <input type="submit" name="try" />
   </form>
+  <p id ="response"></p>
 </div></div>
 
 <br />
-
-{% if session.matches|length is not equalto 0  %}
-<h2>You found </h2>
+<h2>You found</h2>
 <p id="results">
   {% for match in session.matches %}
-  {{ match }} 
+  {{ match }}
   {% endfor %}
 </p>
-{% endif %}
-
-
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <!-- Mismatch, already found, etc. "flashed" from Python -->
-    {% for message in messages %}
-      <p class="message">{{ message }}</p>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
-
 
  </div> <!-- container -->
+ <script>
+  $("#attempt").keyup(function() {
+    var text = $("#attempt").val();
+    $.getJSON("/_check", {attempt: text}, function(data) {
+      var rslt = data.result;
+      $("#response").text(rslt.message);
+      $("#results").text(rslt.matches.join(" "));
+      if (rslt.new) {
+        $("#attempt").val("");   // clear the box once a word is accepted
+      }
+      if (rslt.win) {
+        window.location.href = "/success";
+      }
+    });
+  });
+
+</script>
 </body> </html>

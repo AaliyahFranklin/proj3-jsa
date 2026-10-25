@@ -1,9 +1,9 @@
 FROM python:3
 MAINTAINER Ram Durairajan "noemail@website.domain"
 RUN apt-get update -y
-RUN apt-get install -y python3-pip python-dev build-essential
-COPY . /app
-WORKDIR /app
+RUN apt-get install -y python3-pip python-dev-is-python3
+COPY . /vocab
+WORKDIR /vocab
 RUN pip install -r requirements.txt
 ENTRYPOINT ["python"]
-CMD ["flask_vocab.py"]
+CMD ["flask_vocab.py" ]
